@@ -20,15 +20,18 @@ def login():
     cur = conn.cursor()
 
     select_query = "SELECT * from users where email = ? and password = ? "
-    row = cur.execute(select_query, (email, password))
-    if row is None:
-        conn.commit()
-        conn.close()
-        return render_template('page-login.html', message='Invalid Credentials')
-    else:
+    rows = []
+    for row in cur.execute(select_query, (email, password)):
+        rows.append(row)
+    print(rows)
+    if len(rows) == 1:
         conn.commit()
         conn.close()
         return render_template('index.html')
+    else:
+        conn.commit()
+        conn.close()
+        return render_template('page-login.html', message='Invalid Credentials')
 
 
 @app.route('/register', methods=['POST'])
@@ -40,8 +43,10 @@ def register_user():
     password = request.form['password']
     email = request.form['email']
     select_query = "SELECT * FROM users where email = ?"
-    row = cur.execute(select_query, (email,))
-    if row is None:
+    rows = []
+    for row in cur.execute(select_query, (email,)):
+        rows.append(row)
+    if not rows:
         user = (username, password, email)
         insert_user = "INSERT INTO users values (?,?,?) "
         cur.execute(insert_user, user)
