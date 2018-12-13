@@ -1,12 +1,78 @@
-from flask import Flask, render_template, request
+import sqlite3
+
+from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
 
-@app.route('/')
-def login():
+@app.route('/', methods=['GET'])
+def login_page():
     return render_template('page-login.html')
 
 
+@app.route('/login', methods=['POST'])
+def login():
+    print('Inside post login')
+    email = request.form['email']
+    password = request.form['password']
+    print(f'email:{email}, password: {password}')
+    conn = sqlite3.connect('data.db')
+    cur = conn.cursor()
+
+    select_query = "SELECT * from users where email = ? and password = ? "
+    row = cur.execute(select_query, (email, password))
+    if row is None:
+        conn.commit()
+        conn.close()
+        return render_template('page-login.html', message='Invalid Credentials')
+    else:
+        conn.commit()
+        conn.close()
+        return render_template('index.html')
+
+
+@app.route('/register', methods=['POST'])
+def register_user():
+    conn = sqlite3.connect('data.db')
+    cur = conn.cursor()
+    # check if it is already there
+    username = request.form['username']
+    password = request.form['password']
+    email = request.form['email']
+    select_query = "SELECT * FROM users where email = ?"
+    row = cur.execute(select_query, (email,))
+    if row is None:
+        user = (username, password, email)
+        insert_user = "INSERT INTO users values (?,?,?) "
+        cur.execute(insert_user, user)
+        conn.commit()
+        conn.close()
+        return render_template('page-login.html', message='Account created, Please login')
+    else:
+        conn.commit()
+        conn.close()
+        return render_template('page-login.html', message='User account already exists')
+
+
+@app.route('/register', methods=["GET"])
+def register_form():
+    return render_template('page-register.html')
+
+
+@app.route('/logout', methods=['GET'])
+def logout():
+    return redirect(url_for('login_page'))
+
+
+def create_tables():
+    conn = sqlite3.connect('data.db')
+    curr = conn.cursor()
+    create_table = "CREATE TABLE IF NOT EXISTS users (username text, password text, email text PRIMARY KEY)"
+    curr.execute(create_table)
+    conn.commit()
+    conn.close()
+
+
 if __name__ == '__main__':
+    create_tables()
     app.run()
