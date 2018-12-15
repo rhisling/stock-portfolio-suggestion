@@ -1,20 +1,24 @@
 import sqlite3
 
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 
 app = Flask(__name__)
+
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 
 @app.route('/', methods=['GET'])
 def login_page():
+    if 'username' in session:
+        return render_template('index.html')
     return render_template('page-login.html')
 
 
 @app.route('/login', methods=['POST'])
 def login():
-    print('Inside post login')
     email = request.form['email']
     password = request.form['password']
+    session['username'] = email
     print(f'email:{email}, password: {password}')
     conn = sqlite3.connect('data.db')
     cur = conn.cursor()
@@ -66,6 +70,7 @@ def register_form():
 
 @app.route('/logout', methods=['GET'])
 def logout():
+    session.pop('username', None)
     return redirect(url_for('login_page'))
 
 
@@ -80,4 +85,4 @@ def create_tables():
 
 if __name__ == '__main__':
     create_tables()
-    app.run()
+    app.run(debug=True)

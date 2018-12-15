@@ -1,7 +1,5 @@
 $( function () {
 	"use strict";
-
-
 	$( ".peity-btc" ).peity( "line", {
 		width: '100%',
 		height: '100'
