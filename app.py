@@ -107,6 +107,7 @@ def get_trends_for_charts():
 
 
 """
+
 PRIVATE METHODS
 
 """
