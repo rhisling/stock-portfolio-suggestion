@@ -139,55 +139,63 @@
                 </div>
             </div>
             <div class="row">
-                <div class="form-group col-md-12">
+                <div class="form-group col-md-12" style="padding:16px; border: 1px solid #6244CE;">
                     <div class=row>
-                        <div class="col-lg-4 col-md-4" style="text-align:center; padding:8px;">
-                            <label for="stockSymbol">Amount to invest</label>
+                        <div class="col-md-3"></div>
+                        <div class="col-lg-3 col-md-4" style="text-align:center; padding:8px;">
+                            <label for="stockSymbol">Amount to invest:</label>
                         </div>
-                        <div class="col-lg-4 col-md-4">
-                            <input type="text" name="stockSymbol" class="form-control" id="amount"
+                        <div class="col-lg-3 col-md-3">
+                            <input type="number" name="stockSymbol" class="form-control" id="amount"
                                    placeholder="Amount" autocomplete="off" aria-describedby="stockHelp">
                         </div>
+                        <div class="col-md-3"></div>
                     </div>
                     {#                    <div class="row">#}
                     {#                        <div class="col-md-4"></div>#}
                     {#                        <button class="btn btn-primary col-md-3" id="recommend"> Get Recommendations</button>#}
                     {#                        <div class="col-md-4"></div>#}
                     {#                    </div>#}
-                    <div class="row" style="margin: 8px">
-                        <div class="col-md-2">
-                            Choose wisely:
+                    <div class="row" style="margin: 32px">
+                        <div class="col-md-1">
                         </div>
-                        <div id='checkboxes'>
-                            <div class="form-check form-check-inline">
+                        <div class="col-md-1">
+                            Strategy:
+                        </div>
+                        <div id='checkboxes' class="col-md-10">
+                            <div class="form-check form-check-inline col-md-2">
                                 <input class="form-check-input" name="strategy" type="checkbox" id="inlineCheckbox1"
                                        value="Ethical Investing">
                                 <label class="form-check-label" for="inlineCheckbox1">Ethical Investing</label>
                             </div>
-                            <div class="form-check form-check-inline">
+                            <div class="form-check form-check-inline col-md-2">
                                 <input class="form-check-input" name="strategy" type="checkbox" id="inlineCheckbox2"
                                        value="Growth Investing">
                                 <label class="form-check-label" for="inlineCheckbox2">Growth Investing</label>
                             </div>
-                            <div class="form-check form-check-inline">
+                            <div class="form-check form-check-inline col-md-2">
                                 <input class="form-check-input" name="strategy" type="checkbox" id="inlineCheckbox3"
                                        value="Index Investing">
                                 <label class="form-check-label" for="inlineCheckbox3">Index Investing</label>
                             </div>
-                            <div class="form-check form-check-inline">
+                            <div class="form-check form-check-inline col-md-2">
                                 <input class="form-check-input" name="strategy" type="checkbox" id="inlineCheckbox4"
                                        value="Quality Investing">
                                 <label class="form-check-label" for="inlineCheckbox4">Quality Investing</label>
                             </div>
-                            <div class="form-check form-check-inline">
+                            <div class="form-check form-check-inline col-md-2">
                                 <input class="form-check-input" name="strategy" type="checkbox" id="inlineCheckbox5"
                                        value="Value Investing">
                                 <label class="form-check-label" for="inlineCheckbox5">Value Investing</label>
                             </div>
                         </div>
-
-                        <br>
-                        <button id='button' class="btn btn-primary" onclick="checkForm()">Get Recommendation</button>
+                    </div>
+                    <div class="row" style="margin:32px;">
+                        <div class="col-md-5"></div>
+                        <button id='button' class="btn btn-primary col-md-2" onclick="checkForm()">Get
+                            Recommendation
+                        </button>
+                        <div class="col-md-5"></div>
                     </div>
                 </div>
             </div>

@@ -137,6 +137,7 @@ function doAjax(cmp) {
 
 $( function () {
 	"use strict";
+	$('#charts').empty();
 	$( ".peity-btc" ).peity( "line", {
 		width: '100%',
 		height: '100'
