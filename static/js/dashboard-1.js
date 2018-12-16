@@ -81,43 +81,52 @@ function checkForm() {
 	console.log(json);
 	console.log(selected);
 	console.log(resultArray);
-	let keys = ['TI03TLBOD4DORV4V', '7FCZB2RJ2FI9CNEJ', 'VQKAZERBK13GBYD6', 'N8GNU3T4WVMLKXGH', 'C3UMGJ3EA980AWMZ', 'LEZFOUWRRFGOT5KM'];
-	let i = 0;
-	let datas = [];
+	//let keys = ['TI03TLBOD4DORV4V', '7FCZB2RJ2FI9CNEJ', 'VQKAZERBK13GBYD6', 'N8GNU3T4WVMLKXGH', 'C3UMGJ3EA980AWMZ', 'LEZFOUWRRFGOT5KM'];
+	//let i = 0;
+
 	resultArray.forEach((sym) => {
-		datas.push(doAjax(sym, keys[i]));
-		i++;
+		doAjax(sym);
+		//i++;
 	});
 	let arr1 = [6, 2, 8, 4, 3, 8, 1, 3, 6, 5, 9, 2, 8, 1, 4, 8, 9, 8, 2, 1];
-	datas.forEach((data) => {
-		$('#charts').append(createCard(data));
-
-		$("." + data['symbol']).peity("line", {
-			width: '100%',
-			height: '100'
-		});
-		console.log("charts+" + data['charts']);
-		let arr = data['charts'];
-		$('.' + 'symbol').text(arr.join(',')).change();
-
-	});
+	// datas.forEach((data) => {
+	// 	$('#charts').append(createCard(data));
+	//
+	// 	$("." + data['symbol']).peity("line", {
+	// 		width: '100%',
+	// 		height: '100'
+	// 	});
+	// 	console.log("charts+" + data['charts']);
+	// 	let arr = data['charts'];
+	// 	$('.' + 'symbol').text(arr.join(',')).change();
+	//
+	// });
 
 	$(".peity-btc").text(arr1.join(',')).change();
 
 }
 
-function doAjax(cmp, key) {
+function doAjax(cmp) {
 	let result = {};
 	$.ajax({
 		url: '/trends',
 		type: 'POST',
-		async: false,
 		dataType: 'json',
-		data: JSON.stringify({'symbol': cmp, 'key': key}),
+		data: JSON.stringify({'symbol': cmp}),
 		contentType: 'application/json',
-		success: function (results) {
-			result = results;
-			console.log("results:" + JSON.stringify(results));
+		success: function (data) {
+
+			console.log("results:" + JSON.stringify(data));
+
+			//create chart
+			$('#charts').append(createCard(data));
+			$("." + data['symbol']).peity("line", {
+				width: '100%',
+				height: '100'
+			});
+			console.log("charts+" + data['charts']);
+			let arr = data['charts'];
+			$('.' + 'symbol').text(arr.join(',')).change();
 		},
 		error: function (jqXHR, textStatus, errorThrown) {
 			alert('error ' + textStatus + ' ' + errorThrown);
@@ -184,12 +193,14 @@ function createCard(data) {
 		fArr.push(Math.abs(ele - mean));
 	});
 
+	let icon = getLogo(data['symbol']);
 	let cardTemplate = '<div class="col-lg-4">\n' +
 		'                    <div class="card">\n' +
 		'                        <div class="card-body">\n' +
 		'                            <div class="stat-widget-seven">\n' +
 		'                                <div class="row">\n' +
 		'                                    <div class="col-2">\n' +
+		'                                      <i class="' + icon + '" title="BTC"></i>' +
 		'                                      \n' +
 		'                                    </div>\n' +
 		'                                    <div class="col-5">\n' +
@@ -213,4 +224,29 @@ function createCard(data) {
 		'    </div>';
 
 	return cardTemplate;
+}
+
+
+function getLogo(sym) {
+	switch (sym) {
+		case 'AAPL':
+			return 'fab fa-apple fa-3x';
+		case 'ADBE':
+			return 'fab fa-adobe fa-3x';
+		case 'GOOG':
+			return 'fab fa-google fa-3x';
+		case 'MSFT':
+			return 'fab fa-microsoft fa-3x';
+		case 'EBAY':
+			return 'fab fa-ebay fa-3x';
+		case 'AMZN':
+			return 'fab fa-amazon fa-3x';
+		case 'TWTR':
+			return 'fab fa-twitter fa-3x';
+		case 'FB':
+			return 'fab fa-facebook fa-3x';
+		case 'PYPL':
+			return 'fab fa-paypal fa-3x';
+	}
+
 }
