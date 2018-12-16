@@ -192,6 +192,13 @@ function createCard(data) {
 	arr.forEach((ele) => {
 		fArr.push(Math.abs(ele - mean));
 	});
+	let name;
+	console.log("Name length:" + data['name'].length);
+	if (data.name.length > 14) {
+		let words = data['name'].split(" ");
+		name = words[0];
+	} else
+		name = data['name'];
 
 	let icon = getLogo(data['symbol']);
 	let cardTemplate = '<div class="col-lg-4">\n' +
@@ -204,7 +211,7 @@ function createCard(data) {
 		'                                      \n' +
 		'                                    </div>\n' +
 		'                                    <div class="col-5">\n' +
-		'                                        <h3 id="name">' + data.name + '</h3>\n' +
+		'                                        <h3 id="name">' + name + '</h3>\n' +
 		'                                        <h6 class="text-muted"><span\n' +
 		'                                                class="text-info">' + data.change + '</span></h6>\n' +
 		'                                    </div>\n' +
