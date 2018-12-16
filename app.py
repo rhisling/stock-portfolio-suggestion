@@ -94,35 +94,65 @@ def logout():
 
 
 @app.route('/trends', methods=['POST'])
-def get_trends_for_charts():
+def get_trends_for_charts():    
     data = request.get_json()
-    print("requestdata", str(data))
     symbol = data['symbol']
-    key = data['key']
-    url = f'https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords={symbol}&apikey={key}'
-    url2 = f'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={symbol}&apikey={key}'
-    url3 = f'https://api.intrinio.com/prices?identifier={symbol}&api_key=OjkwMmVlODE5Yjc1MTQzZWExZTI0ZWMzNzA0NGE3NjA4'
-    name = get_name(url)
-    charts = get_chart_trends(url3)
-    if name == 'invalid_symbol':
-        print('Invalid Symbol')
-        return render_template('error.html', msg="Invalid Symbol")
-    elif name == 'api_error':
-        print("Check your internet connection or try again later")
-        return render_template('error.html', msg="Check your internet connection or try again later")
-    elif name:
-        price, change, change_percent = get_price(url2)
-        date = get_time()
-        res = {
+    url = f'https://api.iextrading.com/1.0/stock/{symbol}/chart/dynamic'
+    price_url = f'https://api.iextrading.com/1.0/stock/{symbol}/price'
+    company_url = f'https://api.iextrading.com/1.0/stock/{symbol}/company'
+    response = requests.get(url)
+    if not response:
+        # return render_template('error.html', msg="Invalid Symbol") 
+        return "Unknown symbol"
+        
+    response = response.json()["data"][~10:] 
+    charts = [item['open'] for item in response]
+    price = requests.get(price_url).json()
+    company_name = requests.get(company_url).json()['companyName']
+    date = get_time()
+    change = response[-1]['change']
+    change_percent = response[-1]['changePercent']
+    print("*****")
+    print(company_name)
+    print("******")
+
+    res = {
             'price': price,
             'change': round(float(change), 2),
             'change_percent': round(float(change_percent), 2),
             'date': date,
-            'name': name,
+            'name': company_name,
             'charts': charts,
             'symbol':symbol
         }
-        return jsonify(res)
+    return jsonify(res)
+    # print("requestdata", str(data))
+    # symbol = data['symbol']
+    # key = data['key']
+    # url = f'https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords={symbol}&apikey={key}'
+    # url2 = f'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={symbol}&apikey={key}'
+    # url3 = f'https://api.intrinio.com/prices?identifier={symbol}&api_key=OjkwMmVlODE5Yjc1MTQzZWExZTI0ZWMzNzA0NGE3NjA4'
+    # name = get_name(url)
+    # charts = get_chart_trends(url3)
+    # if name == 'invalid_symbol':
+    #     print('Invalid Symbol')
+    #     return render_template('error.html', msg="Invalid Symbol")
+    # elif name == 'api_error':
+    #     print("Check your internet connection or try again later")
+    #     return render_template('error.html', msg="Check your internet connection or try again later")
+    # elif name:
+    #     price, change, change_percent = get_price(url2)
+    #     date = get_time()
+    #     res = {
+    #         'price': price,
+    #         'change': round(float(change), 2),
+    #         'change_percent': round(float(change_percent), 2),
+    #         'date': date,
+    #         'name': name,
+    #         'charts': charts,
+    #         'symbol':symbol
+    #     }
+    #     return jsonify(res)
 
 
 """
