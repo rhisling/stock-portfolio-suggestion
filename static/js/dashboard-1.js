@@ -43,7 +43,7 @@ const json = {
 		"name": "TSLA",
 		"portion": "30"
 	}, {
-		"name": "JCI",
+		"name": "BBY",
 		"portion": "30"
 	}, {
 		"name": "PYPL",
