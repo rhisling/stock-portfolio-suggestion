@@ -23,6 +23,14 @@ def login_page():
         return render_template('index.html')
     return render_template('page-login.html')
 
+@app.route('/team', methods=['GET'])
+def team():
+    return render_template('team.html')
+
+@app.route('/userprofile', methods=['GET'])
+def userprofile():
+    return render_template('userprofile.html',username=session['username'])
+
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -46,6 +54,7 @@ def login():
         conn.commit()
         conn.close()
         return render_template('page-login.html', message='Invalid Credentials')
+
 
 
 @app.route('/register', methods=['POST'])
