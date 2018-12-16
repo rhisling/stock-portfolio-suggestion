@@ -4,12 +4,17 @@ import re
 import sqlite3
 
 import requests
-from flask import Flask, render_template, request, redirect, url_for, session,jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from pytz import timezone
 
 app = Flask(__name__)
 
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
+
+"""
+ROUTES
+
+"""
 
 
 @app.route('/', methods=['GET'])
@@ -81,11 +86,14 @@ def logout():
 
 @app.route('/trends', methods=['POST'])
 def get_trends_for_charts():
-    data = request.json()
+    data = request.get_json()
+    print(str(data))
     symbol = data['symbol']
     url = f'https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords={symbol}&apikey=7FCZB2RJ2FI9CNEJ'
     url2 = f'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={symbol}&apikey=7FCZB2RJ2FI9CNEJ'
+    url3 = f'https://api.intrinio.com/prices?identifier={symbol}&api_key=OjkwMmVlODE5Yjc1MTQzZWExZTI0ZWMzNzA0NGE3NjA4'
     name = get_name(url)
+    charts = get_chart_trends(url3)
     if name == 'invalid_symbol':
         print('Invalid Symbol')
         return render_template('error.html', msg="Invalid Symbol")
@@ -96,13 +104,13 @@ def get_trends_for_charts():
         price, change, change_percent = get_price(url2)
         date = get_time()
         res = {
-            price: price,
-            change: round(float(change), 2),
-            change_percent: round(float(change_percent), 2),
-            date: date,
-            name: name
+            'price': price,
+            'change': round(float(change), 2),
+            'change_percent': round(float(change_percent), 2),
+            'date': date,
+            'name': name,
+            'charts': charts
         }
-
         return jsonify(res)
 
 
@@ -111,6 +119,22 @@ def get_trends_for_charts():
 PRIVATE METHODS
 
 """
+
+
+def get_chart_trends(link):
+    response = requests.get(link)
+    lt = []
+    series = response.json()['data']
+    ##print(str(series))
+    count = 0
+    for item in series:
+        if count == 10:
+            break
+        lt.append(item["adj_open"])
+        count += 1
+
+    return lt
+
 
 
 def clean_data(json_data):

@@ -26,5 +26,16 @@ $( function () {
 		height: '100'
 	} );
 
+
+	//let arr = [6, 2, 8, 4, 3, 8, 1, 3, 6, 5, 9, 2, 8, 1, 4, 8, 9, 8, 2, 1];
+
+	$('#recommend').on('click', function () {
+		let symbols = ['AAPL', 'ADBE', 'NKE', 'GOOG', 'EBAY', 'AMZN'];
+
+		let arr = [6, 2, 8, 4, 3, 8, 1, 3, 6, 5, 9, 2, 8, 1, 4, 8, 9, 8, 2, 1];
+		$(".peity-btc").text(arr.join(',')).change();
+
+
+	})
 	
 } );
