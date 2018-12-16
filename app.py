@@ -96,10 +96,11 @@ def logout():
 @app.route('/trends', methods=['POST'])
 def get_trends_for_charts():
     data = request.get_json()
-    print(str(data))
+    print("requestdata", str(data))
     symbol = data['symbol']
-    url = f'https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords={symbol}&apikey=7FCZB2RJ2FI9CNEJ'
-    url2 = f'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={symbol}&apikey=7FCZB2RJ2FI9CNEJ'
+    key = data['key']
+    url = f'https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords={symbol}&apikey={key}'
+    url2 = f'https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={symbol}&apikey={key}'
     url3 = f'https://api.intrinio.com/prices?identifier={symbol}&api_key=OjkwMmVlODE5Yjc1MTQzZWExZTI0ZWMzNzA0NGE3NjA4'
     name = get_name(url)
     charts = get_chart_trends(url3)
@@ -118,7 +119,8 @@ def get_trends_for_charts():
             'change_percent': round(float(change_percent), 2),
             'date': date,
             'name': name,
-            'charts': charts
+            'charts': charts,
+            'symbol':symbol
         }
         return jsonify(res)
 
@@ -177,6 +179,7 @@ def get_name(link):
 def get_price(link):
     response = requests.get(link)
     j_data = json.loads(response.content)
+    print("jdata",str(j_data))
     result_map_unclean = j_data['Global Quote']
     result_map = clean_data(result_map_unclean)
     if result_map['price'] and result_map['change'] and result_map['change percent']:
