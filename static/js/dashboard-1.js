@@ -200,6 +200,7 @@ function createCard(data) {
 	} else
 		name = data['name'];
 
+	let colorForGraph = getRandomColor();
 	let icon = getLogo(data['symbol']);
 	let cardTemplate = '<div class="col-lg-4">\n' +
 		'                    <div class="card">\n' +
@@ -223,7 +224,7 @@ function createCard(data) {
 		'                                </div>\n' +
 		'                                <div class="m-t-15">\n' +
 		'                                    <span class="' + data.symbol + '"\n' +
-		'                                          data-peity=\'{ "fill": "rgba(247, 147, 26, 0.5)", "stroke": "#f7931a"}\'>' + fArr.join(',') + '</span>\n' +
+		'                                          data-peity=\'{ "fill": "' + colorForGraph + '", "stroke": "' + colorForGraph + '"}\'>' + fArr.join(',') + '</span>\n' +
 		'                                </div>\n' +
 		'                            </div>\n' +
 		'                    </div>\n' +
@@ -255,5 +256,12 @@ function getLogo(sym) {
 		case 'PYPL':
 			return 'fab fa-paypal fa-3x';
 	}
+
+}
+
+function getRandomColor() {
+return "rgba(" + Math.floor(Math.random() * 255) + ","
+                  + Math.floor(Math.random() * 255) + ","
+                  + Math.floor(Math.random() * 255) + ",0.2)";
 
 }
