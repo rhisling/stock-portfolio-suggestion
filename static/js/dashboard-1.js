@@ -196,11 +196,15 @@ function createCard(data) {
 	console.log("Name length:" + data['name'].length);
 	if (data.name.length > 14) {
 		let words = data['name'].split(" ");
-		name = words[0];
+		if (words.length >= 2 && (words[0].length + words[1].length) < 9)
+			name = words[0] + " " + words[1];
+		else
+			name = words[0];
 	} else
 		name = data['name'];
 
-	let colorForGraph = getRandomColor();
+	let colorForGraph = randomColor({luminosity: 'light', hue: '#6244CE'});
+	let colorForGraphFill = randomColor({luminosity: 'light', hue: colorForGraph, alpha: 0.3});
 	let icon = getLogo(data['symbol']);
 	let cardTemplate = '<div class="col-lg-4">\n' +
 		'                    <div class="card">\n' +
@@ -224,7 +228,7 @@ function createCard(data) {
 		'                                </div>\n' +
 		'                                <div class="m-t-15">\n' +
 		'                                    <span class="' + data.symbol + '"\n' +
-		'                                          data-peity=\'{ "fill": "' + colorForGraph + '", "stroke": "' + colorForGraph + '"}\'>' + fArr.join(',') + '</span>\n' +
+		'                                          data-peity=\'{ "fill": "' + colorForGraphFill + '", "stroke": "' + colorForGraph + '"}\'>' + fArr.join(',') + '</span>\n' +
 		'                                </div>\n' +
 		'                            </div>\n' +
 		'                    </div>\n' +
