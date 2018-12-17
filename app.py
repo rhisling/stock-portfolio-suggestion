@@ -132,7 +132,8 @@ def logout():
 def get_trends_for_charts():
     data = request.get_json()
     symbol = data['symbol']
-    url = f'https://api.iextrading.com/1.0/stock/{symbol}/chart/dynamic'
+    print(symbol)
+    url = f'https://api.iextrading.com/1.0/stock/{symbol}/chart/1m'
     price_url = f'https://api.iextrading.com/1.0/stock/{symbol}/price'
     company_url = f'https://api.iextrading.com/1.0/stock/{symbol}/company'
     response = requests.get(url)
@@ -140,12 +141,18 @@ def get_trends_for_charts():
         # return render_template('error.html', msg="Invalid Symbol")
         return "Unknown symbol"
 
-    response = response.json()["data"][~10:]
+    response = response.json()[~10:]
+    print(response)
+
+    for a in response:
+        print(a['open'])
+
     charts = [item['open'] for item in response]
     vishal = [item['date'] for item in response]
     price = requests.get(price_url).json()
     company_name = requests.get(company_url).json()['companyName']
     date = get_time()
+
     change = response[-1]['change']
     change_percent = response[-1]['changePercent']
     print("*****")
