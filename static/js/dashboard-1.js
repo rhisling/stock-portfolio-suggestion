@@ -1,5 +1,11 @@
 user_amount = 0
 stock_amount = {};
+let resultArray = [];
+let vishal_sum_stock = [0,0,0,0,0,0,0,0,0,0];
+let vishal_date = undefined;
+
+let count = 0;
+
 const json = {
 	"Ethical Investing": [{
 		"name": "AAPL",
@@ -55,6 +61,10 @@ const json = {
 
 
 function checkForm() {
+	count = 0;
+	resultArray = [];
+	vishal_sum_stock = [0,0,0,0,0,0,0,0,0,0];
+	stock_amount = {}
 	$('#charts').empty();
 	let amount = $('#amount').val();
 	console.log(amount);
@@ -65,12 +75,17 @@ function checkForm() {
 		selected.push($(this).attr('value'));
 	});
 
+	if(amount < 5000){
+		alert('Amount should be greater than 5000');
+		return;
+	}
+
 	if (selected.length > 2) {
 		alert('You can only select atmost 2 strategies');
 		return;
 	}
 
-	let resultArray = [];
+
 
 	for (let i = 0; i < selected.length; i++) {
 		console.log(json[selected[i]]);
@@ -78,7 +93,7 @@ function checkForm() {
 		for (let j = 0; j < json[selected[i]].length; j++) {
 			resultArray.push(json[selected[i]][j]['name']);
 			stock_amount[json[selected[i]][j]['name']] = json[selected[i]][j]['portion']/100.0 * user_amount /selected.length;
-			
+
 		}
 
 	}
@@ -86,13 +101,24 @@ function checkForm() {
 	console.log(json);
 	console.log(selected);
 	console.log(resultArray);
+	console.log('HERE');
 	//let keys = ['TI03TLBOD4DORV4V', '7FCZB2RJ2FI9CNEJ', 'VQKAZERBK13GBYD6', 'N8GNU3T4WVMLKXGH', 'C3UMGJ3EA980AWMZ', 'LEZFOUWRRFGOT5KM'];
 	//let i = 0;
 
+
+
+
+	    // foo.forEach((value, index, array) => {
+	    //     console.log(value);
+			//
+	    // });
 	resultArray.forEach((sym) => {
 		doAjax(sym);
 		//i++;
 	});
+
+
+
 	let arr1 = [6, 2, 8, 4, 3, 8, 1, 3, 6, 5, 9, 2, 8, 1, 4, 8, 9, 8, 2, 1];
 	// datas.forEach((data) => {
 	// 	$('#charts').append(createCard(data));
@@ -106,6 +132,10 @@ function checkForm() {
 	// 	$('.' + 'symbol').text(arr.join(',')).change();
 	//
 	// });
+
+
+
+
 
 	$(".peity-btc").text(arr1.join(',')).change();
 
@@ -124,14 +154,39 @@ function doAjax(cmp) {
 			console.log("results:" + JSON.stringify(data));
 
 			//create chart
+			count++;
 			$('#charts').append(createCard(data));
 			$("." + data['symbol']).peity("line", {
 				width: '100%',
 				height: '100'
 			});
 			console.log("charts+" + data['charts']);
+			console.log("vishal+" + data['vishal']);
+
+			if(!vishal_date){
+				vishal_date = data['vishal'].slice(0,10);
+			}
+
+			for(let i = 0; i < 10; i++){
+				vishal_sum_stock[i] += data['charts'][i];
+			}
+
+
+			console.log('vishal_sum_stock'+ vishal_sum_stock);
+			console.log('vishal_date'+ vishal_date);
+
+			console.log(vishal_date.length, vishal_sum_stock.length);
+
 			let arr = data['charts'];
 			$('.' + 'symbol').text(arr.join(',')).change();
+
+			console.log(count, resultArray.length);
+
+			if(count === resultArray.length){
+				console.log('HHHHHHHHHHHH');
+				do_vishal_charts();
+			}
+
 		},
 		error: function (jqXHR, textStatus, errorThrown) {
 			alert('error ' + textStatus + ' ' + errorThrown);
@@ -212,6 +267,7 @@ function createCard(data) {
 	let colorForGraph = randomColor({luminosity: 'light', hue: '#6244CE'});
 	let colorForGraphFill = randomColor({luminosity: 'light', hue: colorForGraph, alpha: 0.3});
 	let icon = getLogo(data['symbol']);
+	console.log(stock_amount[data.symbol])
 	let cardTemplate = '<div class="col-lg-4">\n' +
 		'                    <div class="card">\n' +
 		'                        <div class="card-body">\n' +
@@ -227,7 +283,7 @@ function createCard(data) {
 		'                                                class="text-info">' + data.change + '</span></h6>\n' +
 		'                                    </div>\n' +
 		'                                    <div class="col-5 text-right">\n' +
-		'                                        <h3>$' + data.price + '</h3>\n' +
+		'                                        <h3>$' + data.price.toFixed(2)  + '</h3>\n' +
 		'                                        <h6 class="' + color + '">' + data.change_percent + '% <i\n' +
 		'                                                class="' + arrow + ' f-s-16' + color + 'm-l-5"></i></h6>\n' +
 		'                                    </div>\n' +
@@ -273,5 +329,111 @@ function getRandomColor() {
 return "rgba(" + Math.floor(Math.random() * 255) + ","
                   + Math.floor(Math.random() * 255) + ","
                   + Math.floor(Math.random() * 255) + ",0.2)";
+
+}
+
+function do_vishal_charts(){
+
+	console.log(vishal_date,vishal_sum_stock);
+
+
+	let mov = vishal_sum_stock[9];
+
+	mov = user_amount/mov;
+
+	for(let p = 0 ; p < 10; p++){
+		vishal_sum_stock[p] = vishal_sum_stock[p]*mov;
+	}
+
+	console.log(vishal_sum_stock);
+
+
+	Highcharts.chart('vishal-container-line', {
+    chart: {
+        type: 'line'
+    },
+    title: {
+        text: 'PORTFOLIO PAST PERFORMANCE'
+    },
+    subtitle: {
+        text: 'Performace in the last 10 days'
+    },
+    xAxis: {
+        categories: vishal_date
+    },
+    yAxis: {
+        title: {
+            text: 'Price ($)'
+        }
+    },
+    plotOptions: {
+        line: {
+            dataLabels: {
+                enabled: true,
+								format: '{point.y:.2f} ',
+            },
+            enableMouseTracking: false
+        }
+    },
+    series: [{
+        name: 'Portfolio trend line',
+        data: vishal_sum_stock
+    }]
+	});
+
+
+
+	console.log(stock_amount);
+	const donut_data = [];
+	console.log(Object.keys(stock_amount));
+ 	let keys = Object.keys(stock_amount)
+
+	keys.forEach( item => {
+		donut_data.push({
+			name : item,
+			y : stock_amount[item]
+		});
+	})
+
+	console.log(donut_data);
+
+
+	console.log('hfsdfh');
+
+
+
+	Highcharts.chart('vishal-container-donut', {
+    chart: {
+        plotBackgroundColor: null,
+        plotBorderWidth: null,
+        plotShadow: false,
+        type: 'pie'
+    },
+    title: {
+        text: 'PORTFOLIO RATIO'
+    },
+    tooltip: {
+        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            cursor: 'pointer',
+            dataLabels: {
+                enabled: true,
+                format: '<b>{point.name}</b>: {point.y:.2f}',
+                style: {
+                    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                }
+            }
+        }
+    },
+    series: [{
+        name: 'Brands',
+        colorByPoint: true,
+        data: donut_data
+    }]
+});
+
 
 }

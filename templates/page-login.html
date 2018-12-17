@@ -15,6 +15,49 @@
 
     <link href="{{ url_for('static', filename= 'css/style.css') }}" rel="stylesheet" type="text/css">
 {#    <link type="text/css" rel="stylesheet" href="{{ url_for('static',filename='styles/index.css') }}"/>#}
+
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+    <script type="text/javascript">
+      function onSignIn(googleUser) {
+        console.log('HERE');
+        var profile = googleUser.getBasicProfile();
+        console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+        console.log('Name: ' + profile.getName());
+        console.log('Image URL: ' + profile.getImageUrl());
+        console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+        // $.post( "/login", {
+        //   email: profile.getEmail(),
+        //   password: 'AAAAAA'
+        // });
+
+        data = new FormData();
+        data.append('email',profile.getEmail());
+        data.append('password','gfdgff' )
+
+        $.ajax({
+      		url: '/google-login',
+          data: data,
+      		type: 'POST',
+          processData: false,
+          contentType: false,
+        });
+        window.location.reload();
+
+      }
+    </script>
+
+    <script>
+      function signOut() {
+        var auth2 = gapi.auth2.getAuthInstance();
+        auth2.signOut().then(function () {
+          console.log('User signed out.');
+        });
+      }
+    </script>
+
+    <meta name="google-signin-client_id" content="967447578238-ltqdlock1k357t9gtrpjebvtl01h8sqt.apps.googleusercontent.com">
+
 </head>
 
 <body class="header-fix fix-sidebar">
@@ -53,9 +96,15 @@
 
                                 </div>
                                 <button type="submit" class="btn btn-primary btn-flat m-b-30 m-t-30">Sign in</button>
+
+                                <div class="g-signin2" data-onsuccess="onSignIn"></div>
                                 <div class="register-link m-t-15 text-center">
                                     <p>Don't have account ? <a href="/register"> Sign Up Here</a></p>
                                 </div>
+
+                                <!-- <a href="#" onclick="signOut();">Sign out</a> -->
+
+
                             </form>
                         </div>
                     </div>

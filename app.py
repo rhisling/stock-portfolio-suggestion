@@ -54,8 +54,21 @@ def userprofile():
     return render_template('userprofile.html',username=session['username'])
 
 
+
+@app.route('/google-login', methods=['POST'])
+def googleLogin():
+    print(request)
+    email = request.form['email']
+    password = request.form['password']
+    session['username'] = email
+    print(f'email:{email}, password: {password}')
+    return redirect("/", code=200)
+
+
+
 @app.route('/login', methods=['POST'])
 def login():
+    print(request)
     email = request.form['email']
     password = request.form['password']
     session['username'] = email
@@ -129,6 +142,7 @@ def get_trends_for_charts():
 
     response = response.json()["data"][~10:]
     charts = [item['open'] for item in response]
+    vishal = [item['date'] for item in response]
     price = requests.get(price_url).json()
     company_name = requests.get(company_url).json()['companyName']
     date = get_time()
@@ -145,7 +159,8 @@ def get_trends_for_charts():
             'date': date,
             'name': company_name,
             'charts': charts,
-            'symbol':symbol
+            'symbol':symbol,
+            'vishal': vishal
         }
     return jsonify(res)
     # print("requestdata", str(data))
