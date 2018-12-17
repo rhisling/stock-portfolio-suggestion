@@ -42,6 +42,7 @@ def login_page():
         TWTRprice = requests.get(TWTRprice_url).json()
         PYPLprice_url = f'https://api.iextrading.com/1.0/stock/PYPL/price'
         PYPLprice = requests.get(PYPLprice_url).json()
+        print("AAPLPRICE",AAPLprice)
         return render_template('index.html',AAPLPrice=AAPLprice,ADBEPrice=ADBEprice,GOOGPrice=GOOGprice,FBPrice=FBprice,MSFTPrice=MSFTprice,EBAYPrice=EBAYprice,AMZNPrice=AMZNprice,IBMPrice=IBMprice,TSLAPrice=TSLAprice,TWTRPrice=TWTRprice,PYPLPrice=PYPLprice)
     return render_template('page-login.html')
 
@@ -84,7 +85,33 @@ def login():
     if len(rows) == 1:
         conn.commit()
         conn.close()
-        return render_template('index.html')
+        AAPLprice_url = f'https://api.iextrading.com/1.0/stock/AAPL/price'
+        AAPLprice = requests.get(AAPLprice_url).json()
+        ADBEprice_url = f'https://api.iextrading.com/1.0/stock/ADBE/price'
+        ADBEprice = requests.get(ADBEprice_url).json()
+        FBprice_url = f'https://api.iextrading.com/1.0/stock/FB/price'
+        FBprice = requests.get(FBprice_url).json()
+        MSFTprice_url = f'https://api.iextrading.com/1.0/stock/MSFT/price'
+        MSFTprice = requests.get(MSFTprice_url).json()
+        GOOGprice_url = f'https://api.iextrading.com/1.0/stock/GOOG/price'
+        GOOGprice = requests.get(GOOGprice_url).json()
+        EBAYprice_url = f'https://api.iextrading.com/1.0/stock/EBAY/price'
+        EBAYprice = requests.get(EBAYprice_url).json()
+        AMZNprice_url = f'https://api.iextrading.com/1.0/stock/AMZN/price'
+        AMZNprice = requests.get(AMZNprice_url).json()
+        IBMprice_url = f'https://api.iextrading.com/1.0/stock/IBM/price'
+        IBMprice = requests.get(IBMprice_url).json()
+        TSLAprice_url = f'https://api.iextrading.com/1.0/stock/TSLA/price'
+        TSLAprice = requests.get(TSLAprice_url).json()
+        TWTRprice_url = f'https://api.iextrading.com/1.0/stock/TWTR/price'
+        TWTRprice = requests.get(TWTRprice_url).json()
+        PYPLprice_url = f'https://api.iextrading.com/1.0/stock/PYPL/price'
+        PYPLprice = requests.get(PYPLprice_url).json()
+        print("AAPLPRICE", AAPLprice)
+        ##return render_template('index.html')
+        return render_template('index.html', AAPLPrice=AAPLprice, ADBEPrice=ADBEprice, GOOGPrice=GOOGprice,
+                               FBPrice=FBprice, MSFTPrice=MSFTprice, EBAYPrice=EBAYprice, AMZNPrice=AMZNprice,
+                               IBMPrice=IBMprice, TSLAPrice=TSLAprice, TWTRPrice=TWTRprice, PYPLPrice=PYPLprice)
     else:
         conn.commit()
         conn.close()
