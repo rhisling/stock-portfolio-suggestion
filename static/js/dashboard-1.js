@@ -53,6 +53,69 @@ const json = {
 	}]
 };
 
+const symbolNameLogoMap = {
+	'AAPL': {
+		'icon': 'fab fa-apple fa-3x',
+		'sname': 'Apple Inc.'
+	},
+	'ADBE': {
+		'icon': 'fab fa-adobe fa-3x',
+		'sname': 'Adobe Inc.'
+	},
+	'GOOG': {
+		'icon': 'fab fa-google fa-3x',
+		'sname': 'Alphabet Inc.'
+	},
+	'MSFT': {
+		'icon': 'fab fa-microsoft fa-3x',
+		'sname': 'Microsoft Corp'
+	},
+	'EBAY': {
+		'icon': 'fab fa-ebay fa-3x',
+		'sname': 'eBay Inc.'
+	},
+	'AMZN': {
+		'icon': 'fab fa-amazon fa-3x',
+		'sname': 'Amazon.com'
+	},
+	'IBM': {
+		'icon': 'fas fa-laptop fa-3x',
+		'sname': 'IBM'
+	},
+	'CDNS': {
+		'icon': 'fas fa-microchip fa-3x',
+		'sname': 'Cadence Sys'
+	},
+	'TWTR': {
+		'icon': 'fab fa-twitter fa-3x',
+		'sname': 'Twitter Inc.'
+	},
+	'FB': {
+		'icon': 'fab fa-facebook fa-3x',
+		'sname': 'Facebook Inc.'
+	},
+	'JCI': {
+		'icon': 'fas fa-memory fa-3x',
+		'sname': 'Johnson Ctrls'
+	},
+	'WMT': {
+		'icon': 'fas fa-shopping-cart fa-3x',
+		'sname': 'Walmart Inc.'
+	},
+	'TSLA': {
+		'icon': 'fas fa-car fa-3x',
+		'sname': 'Tesla Inc.'
+	},
+	'BBY': {
+		'icon': 'fas fa-bolt fa-3x',
+		'sname': 'Best Buy Co'
+	},
+	'PYPL': {
+		'icon': 'fab fa-paypal fa-3x',
+		'sname': 'Paypal Inc.'
+	}
+
+};
 
 function checkForm() {
 	$('#charts').empty();
@@ -185,7 +248,7 @@ function createCard(data) {
 	arr.forEach((ele) => {
 		fArr.push(Math.abs(ele - mean));
 	});
-	let name;
+	let name = symbolNameLogoMap;
 	console.log("Name length:" + data['name'].length);
 	if (data.name.length > 14) {
 		let words = data['name'].split(" ");
@@ -196,9 +259,11 @@ function createCard(data) {
 	} else
 		name = data['name'];
 
+	name = symbolNameLogoMap[data.symbol]['sname'];
 	let colorForGraph = randomColor({luminosity: 'light', hue: '#6244CE'});
 	let colorForGraphFill = randomColor({luminosity: 'light', hue: colorForGraph, alpha: 0.3});
-	let icon = getLogo(data['symbol']);
+	// let icon = getLogo(data['symbol']);
+	let icon = symbolNameLogoMap[data.symbol]['icon'];
 	let cardTemplate = '<div class="col-lg-4">\n' +
 		'                    <div class="card">\n' +
 		'                        <div class="card-body">\n' +
@@ -253,7 +318,6 @@ function getLogo(sym) {
 		case 'PYPL':
 			return 'fab fa-paypal fa-3x';
 	}
-
 }
 
 function getRandomColor() {
@@ -262,3 +326,5 @@ return "rgba(" + Math.floor(Math.random() * 255) + ","
                   + Math.floor(Math.random() * 255) + ",0.2)";
 
 }
+
+
