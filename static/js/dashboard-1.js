@@ -143,11 +143,6 @@ function checkForm() {
 		return;
 	}
 
-	if (selected.length > 2) {
-		//alert('You can only select atmost 2 strategies');
-		return;
-	}
-
 
 
 	for (let i = 0; i < selected.length; i++) {
