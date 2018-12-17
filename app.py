@@ -20,7 +20,29 @@ ROUTES
 @app.route('/', methods=['GET'])
 def login_page():
     if 'username' in session:
-        return render_template('index.html')
+        AAPLprice_url = f'https://api.iextrading.com/1.0/stock/AAPL/price'
+        AAPLprice = requests.get(AAPLprice_url).json()
+        ADBEprice_url = f'https://api.iextrading.com/1.0/stock/ADBE/price'
+        ADBEprice = requests.get(ADBEprice_url).json()
+        FBprice_url = f'https://api.iextrading.com/1.0/stock/FB/price'
+        FBprice = requests.get(FBprice_url).json()
+        MSFTprice_url = f'https://api.iextrading.com/1.0/stock/MSFT/price'
+        MSFTprice = requests.get(MSFTprice_url).json()
+        GOOGprice_url = f'https://api.iextrading.com/1.0/stock/GOOG/price'
+        GOOGprice = requests.get(GOOGprice_url).json()
+        EBAYprice_url = f'https://api.iextrading.com/1.0/stock/EBAY/price'
+        EBAYprice = requests.get(EBAYprice_url).json()
+        AMZNprice_url = f'https://api.iextrading.com/1.0/stock/AMZN/price'
+        AMZNprice = requests.get(AMZNprice_url).json()
+        IBMprice_url = f'https://api.iextrading.com/1.0/stock/IBM/price'
+        IBMprice = requests.get(IBMprice_url).json()
+        TSLAprice_url = f'https://api.iextrading.com/1.0/stock/TSLA/price'
+        TSLAprice = requests.get(TSLAprice_url).json()
+        TWTRprice_url = f'https://api.iextrading.com/1.0/stock/TWTR/price'
+        TWTRprice = requests.get(TWTRprice_url).json()
+        PYPLprice_url = f'https://api.iextrading.com/1.0/stock/PYPL/price'
+        PYPLprice = requests.get(PYPLprice_url).json()
+        return render_template('index.html',AAPLPrice=AAPLprice,ADBEPrice=ADBEprice,GOOGPrice=GOOGprice,FBPrice=FBprice,MSFTPrice=MSFTprice,EBAYPrice=EBAYprice,AMZNPrice=AMZNprice,IBMPrice=IBMprice,TSLAPrice=TSLAprice,TWTRPrice=TWTRprice,PYPLPrice=PYPLprice)
     return render_template('page-login.html')
 
 @app.route('/team', methods=['GET'])
@@ -94,7 +116,7 @@ def logout():
 
 
 @app.route('/trends', methods=['POST'])
-def get_trends_for_charts():    
+def get_trends_for_charts():
     data = request.get_json()
     symbol = data['symbol']
     url = f'https://api.iextrading.com/1.0/stock/{symbol}/chart/dynamic'
@@ -102,10 +124,10 @@ def get_trends_for_charts():
     company_url = f'https://api.iextrading.com/1.0/stock/{symbol}/company'
     response = requests.get(url)
     if not response:
-        # return render_template('error.html', msg="Invalid Symbol") 
+        # return render_template('error.html', msg="Invalid Symbol")
         return "Unknown symbol"
-        
-    response = response.json()["data"][~10:] 
+
+    response = response.json()["data"][~10:]
     charts = [item['open'] for item in response]
     price = requests.get(price_url).json()
     company_name = requests.get(company_url).json()['companyName']
