@@ -1,4 +1,4 @@
-user_amount = 0
+user_amount = 0;
 stock_amount = {};
 let resultArray = [];
 let vishal_sum_stock = [0,0,0,0,0,0,0,0,0,0];
@@ -59,6 +59,69 @@ const json = {
 	}]
 };
 
+const symbolNameLogoMap = {
+	'AAPL': {
+		'icon': 'fab fa-apple fa-3x',
+		'sname': 'Apple Inc.'
+	},
+	'ADBE': {
+		'icon': 'fab fa-adobe fa-3x',
+		'sname': 'Adobe Inc.'
+	},
+	'GOOG': {
+		'icon': 'fab fa-google fa-3x',
+		'sname': 'Alphabet Inc.'
+	},
+	'MSFT': {
+		'icon': 'fab fa-microsoft fa-3x',
+		'sname': 'Microsoft Corp'
+	},
+	'EBAY': {
+		'icon': 'fab fa-ebay fa-3x',
+		'sname': 'eBay Inc.'
+	},
+	'AMZN': {
+		'icon': 'fab fa-amazon fa-3x',
+		'sname': 'Amazon.com'
+	},
+	'IBM': {
+		'icon': 'fas fa-laptop fa-3x',
+		'sname': 'IBM'
+	},
+	'CDNS': {
+		'icon': 'fas fa-microchip fa-3x',
+		'sname': 'Cadence Sys'
+	},
+	'TWTR': {
+		'icon': 'fab fa-twitter fa-3x',
+		'sname': 'Twitter Inc.'
+	},
+	'FB': {
+		'icon': 'fab fa-facebook fa-3x',
+		'sname': 'Facebook Inc.'
+	},
+	'JCI': {
+		'icon': 'fas fa-memory fa-3x',
+		'sname': 'Johnson Ctrls'
+	},
+	'WMT': {
+		'icon': 'fas fa-shopping-cart fa-3x',
+		'sname': 'Walmart Inc.'
+	},
+	'TSLA': {
+		'icon': 'fas fa-car fa-3x',
+		'sname': 'Tesla Inc.'
+	},
+	'BBY': {
+		'icon': 'fas fa-bolt fa-3x',
+		'sname': 'Best Buy Co'
+	},
+	'PYPL': {
+		'icon': 'fab fa-paypal fa-3x',
+		'sname': 'Paypal Inc.'
+	}
+
+};
 
 function checkForm() {
 	count = 0;
@@ -81,7 +144,7 @@ function checkForm() {
 	}
 
 	if (selected.length > 2) {
-		alert('You can only select atmost 2 strategies');
+		//alert('You can only select atmost 2 strategies');
 		return;
 	}
 
@@ -101,44 +164,9 @@ function checkForm() {
 	console.log(json);
 	console.log(selected);
 	console.log(resultArray);
-	console.log('HERE');
-	//let keys = ['TI03TLBOD4DORV4V', '7FCZB2RJ2FI9CNEJ', 'VQKAZERBK13GBYD6', 'N8GNU3T4WVMLKXGH', 'C3UMGJ3EA980AWMZ', 'LEZFOUWRRFGOT5KM'];
-	//let i = 0;
-
-
-
-
-	    // foo.forEach((value, index, array) => {
-	    //     console.log(value);
-			//
-	    // });
 	resultArray.forEach((sym) => {
 		doAjax(sym);
-		//i++;
 	});
-
-
-
-	let arr1 = [6, 2, 8, 4, 3, 8, 1, 3, 6, 5, 9, 2, 8, 1, 4, 8, 9, 8, 2, 1];
-	// datas.forEach((data) => {
-	// 	$('#charts').append(createCard(data));
-	//
-	// 	$("." + data['symbol']).peity("line", {
-	// 		width: '100%',
-	// 		height: '100'
-	// 	});
-	// 	console.log("charts+" + data['charts']);
-	// 	let arr = data['charts'];
-	// 	$('.' + 'symbol').text(arr.join(',')).change();
-	//
-	// });
-
-
-
-
-
-	$(".peity-btc").text(arr1.join(',')).change();
-
 }
 
 function doAjax(cmp) {
@@ -198,6 +226,7 @@ function doAjax(cmp) {
 $( function () {
 	"use strict";
 	$('#charts').empty();
+	 $('input[type=checkbox]').prop("checked", false);
 	$( ".peity-btc" ).peity( "line", {
 		width: '100%',
 		height: '100'
@@ -227,14 +256,20 @@ $( function () {
 
 	//let arr = [6, 2, 8, 4, 3, 8, 1, 3, 6, 5, 9, 2, 8, 1, 4, 8, 9, 8, 2, 1];
 
-	$('#recommend').on('click', function () {
-		let symbols = ['AAPL', 'ADBE', 'NKE', 'GOOG', 'EBAY', 'AMZN'];
+	$('input[type=checkbox]').on('change', function (e) {
+		if ($('input[type=checkbox]:checked').length > 2) {
+			$('#reco-button').addClass('sweet-wrong');
+		} else {
+			$('#reco-button').removeClass('sweet-wrong');
+		}
+	});
 
-		let arr = [6, 2, 8, 4, 3, 8, 1, 3, 6, 5, 9, 2, 8, 1, 4, 8, 9, 8, 2, 1];
-		$(".peity-btc").text(arr.join(',')).change();
-
-
-	})
+	$('#reco-button').on('click', function () {
+		if($('#reco-button').hasClass('sweet-wrong')){
+			swal("Oops...", "You have selected more than 2 strategies !!", "info");
+		}
+		checkForm();
+	});
 
 } );
 
@@ -253,7 +288,7 @@ function createCard(data) {
 	arr.forEach((ele) => {
 		fArr.push(Math.abs(ele - mean));
 	});
-	let name;
+	let name = symbolNameLogoMap;
 	console.log("Name length:" + data['name'].length);
 	if (data.name.length > 14) {
 		let words = data['name'].split(" ");
@@ -264,10 +299,11 @@ function createCard(data) {
 	} else
 		name = data['name'];
 
+	name = symbolNameLogoMap[data.symbol]['sname'];
 	let colorForGraph = randomColor({luminosity: 'light', hue: '#6244CE'});
 	let colorForGraphFill = randomColor({luminosity: 'light', hue: colorForGraph, alpha: 0.3});
-	let icon = getLogo(data['symbol']);
-	console.log(stock_amount[data.symbol])
+	// let icon = getLogo(data['symbol']);
+	let icon = symbolNameLogoMap[data.symbol]['icon'];
 	let cardTemplate = '<div class="col-lg-4">\n' +
 		'                    <div class="card">\n' +
 		'                        <div class="card-body">\n' +
@@ -322,7 +358,6 @@ function getLogo(sym) {
 		case 'PYPL':
 			return 'fab fa-paypal fa-3x';
 	}
-
 }
 
 function getRandomColor() {
