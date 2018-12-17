@@ -1,6 +1,7 @@
 document.querySelector('.sweet-wrong').onclick = function(){
-    sweetAlert("Oops...", "Something went wrong !!", "error");
+    sweetAlert("Oops...", "You have selected 2 strategies !!", "error");
 };
+/*
 document.querySelector('.sweet-message').onclick = function(){
     swal("Hey, Here's a message !!")
 };
@@ -101,3 +102,4 @@ document.querySelector('.sweet-ajax').onclick = function(){
             }, 2000);
         });
 };
+*/
