@@ -262,8 +262,9 @@ $( function () {
 	$('#reco-button').on('click', function () {
 		if($('#reco-button').hasClass('sweet-wrong')){
 			swal("Oops...", "You have selected more than 2 strategies !!", "info");
+		} else {
+			checkForm();
 		}
-		checkForm();
 	});
 
 } );
