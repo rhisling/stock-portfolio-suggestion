@@ -86,6 +86,7 @@ function doAjax(cmp) {
 $( function () {
 	"use strict";
 	$('#charts').empty();
+	 $('input[type=checkbox]').prop("checked", false);
 	$( ".peity-btc" ).peity( "line", {
 		width: '100%',
 		height: '100'
